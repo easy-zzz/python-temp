@@ -4,42 +4,42 @@
 В противном случае ничего не делает.
 """
 
-# Стандартный импорт библиотеки
+# Импорт стандартных библиотек
 import pathlib
 import sys
 
-# Third party imports
+# Сторонний импорт
 try:
     from aocd.models import Puzzle
 except ImportError:
     pypi_url = "https://pypi.org/project/advent-of-code-data/"
-    print(f"Install {pypi_url} to autodownload input files")
+    print(f"Установите {pypi_url} для автоматической загрузки входных файлов")
     raise SystemExit()
 
 
 def download(year, day):
-    """Get input and write it to input.txt inside the puzzle folder"""
+    """Получите входные данные и запишите их в input.txt внутри папки с головоломками"""
     puzzle = Puzzle(year=year, day=day)
 
-    # Download input
+    # Скачать вход
     year_path = pathlib.Path(__file__).parent / str(year)
     output_path = next(year_path.glob(f"{day:02d}*")) / "input.txt"
     output_path.write_text(puzzle.input_data)
 
-    # Add README with link to puzzle text
+    # Добавить readme по ссылке на текст головоломки
     readme_path = output_path.with_name("README.md")
     readme_path.write_text(
         f"# {puzzle.title}\n\n"
-        f"**Advent of Code: Day {day}, {year}**\n\n"
-        f"See {puzzle.url}\n"
+        f"**Появление кода: День {day}, {year}**\n\n"
+        f"Смотреть {puzzle.url}\n"
     )
 
 
 if __name__ == "__main__":
     try:
-        # Read year and day from command line
+        # Читать год и день из командной строки
         download(year=int(sys.argv[1]), day=int(sys.argv[2]))
     except Exception as err:
-        # Catch exceptions so that Copier doesn't clean up directories
-        print(f"Download of input failed: {err}")
+        # Поймайте исключения, чтобы копиер не очищал каталоги
+        print(f"Загрузка ввода не удалась: {err}")
         raise SystemExit()
